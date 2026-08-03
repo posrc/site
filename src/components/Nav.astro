@@ -1,0 +1,19 @@
+---
+const { pathname } = Astro.url;
+---
+
+<nav
+  class="nav"
+  style="position:sticky;top:0;z-index:20;gap:22px;padding:14px clamp(20px,5vw,72px);backdrop-filter:blur(14px);background:color-mix(in srgb, var(--color-bg) 78%, transparent);box-shadow:0 1px 0 var(--color-divider)"
+>
+  <a
+    class="nav-brand"
+    href="/"
+    style="display:flex;align-items:baseline;gap:2px;text-decoration:none;margin-right:auto;letter-spacing:-0.02em"
+  >
+    <span>projectopensource</span><span style="color:var(--color-accent)">.org</span>
+  </a>
+  <a href="/" aria-current={pathname === "/" ? "page" : undefined}>Projects</a>
+  <a href="/about" aria-current={pathname === "/about" ? "page" : undefined}>About</a>
+  <a href="https://github.com/posrc" target="_blank" rel="noreferrer">GitHub</a>
+</nav>
