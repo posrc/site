@@ -11,12 +11,8 @@ const { variant = "project" } = Astro.props;
       MIT licensed. Issues and pull requests welcome; feature requests get read
       on the bus.
     </footer>
-  ) : variant === "about" ? (
-    <footer style="padding:clamp(40px,5vw,72px) 0;font-size:13px;color:color-mix(in srgb, var(--color-text) 52%, transparent)">
-      projectopensource.org — every build MIT licensed.
-    </footer>
   ) : (
-    <footer style="max-width:1120px;margin:0 auto;padding:clamp(40px,5vw,72px) clamp(20px,5vw,72px);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13px;color:color-mix(in srgb, var(--color-text) 52%, transparent)">
+    <footer style="max-width:1120px;margin:0 auto;padding:clamp(40px,5vw,72px) clamp(20px,5vw,72px);border-top:1px solid var(--color-divider);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:13px;color:color-mix(in srgb, var(--color-text) 52%, transparent)">
       <span>projectopensource.org — every build MIT licensed.</span>
       <span style="display:flex;gap:18px">
         <a href="https://github.com/posrc" target="_blank" rel="noreferrer">
