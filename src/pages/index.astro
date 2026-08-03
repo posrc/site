@@ -1,17 +1,103 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getProjects } from "../lib/projects";
+import { computeStats } from "../lib/stats";
 
+const projects = await getProjects();
+const stats = computeStats(projects);
+
+const resultLabel = `${projects.length} build${projects.length === 1 ? "" : "s"}`;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="projectopensource.org — Rebuilding AI tools worth $20 a month, for free."
+  description="CS student. I pick a subscription I resent paying for, work out what it actually does, and ship an open-source version you can run yourself."
+  footerVariant="home"
+>
+  <section style="max-width:1120px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(40px,6vw,72px)">
+    <p style="display:flex;align-items:center;gap:14px;margin:0 0 20px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent)">
+      <span style="width:44px;height:1px;background:var(--color-accent)"></span>Yuvan Adarsh Jagannathan
+    </p>
+    <h1 style="margin:0;font-size:clamp(40px,6.1vw,82px);line-height:1.06;letter-spacing:-0.028em;max-width:17ch">
+      Rebuilding AI tools worth <span style="color:var(--color-accent)">$20 a month</span>, for free.
+    </h1>
+    <p style="margin:28px 0 0;font-size:17.5px;line-height:1.6;max-width:56ch;color:color-mix(in srgb, var(--color-text) 80%, transparent)">
+      CS student. I pick a subscription I resent paying for, work out what it
+      actually does, and ship an open-source version you can run yourself.
+      The builds are honest about where they fall short — that list is on
+      every project page.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:30px">
+      <a class="btn btn-primary" href="#builds">Browse the builds</a>
+      <a class="btn btn-secondary" href="https://github.com/posrc" target="_blank" rel="noreferrer">GitHub profile</a>
+    </div>
+  </section>
+
+  <section
+    aria-label="Site stats"
+    style="max-width:1120px;margin:0 auto;padding:0 clamp(20px,5vw,72px) clamp(56px,7vw,96px);display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:24px;border-top:1px solid var(--color-divider)"
+  >
+    <div style="padding-top:28px">
+      <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:clamp(34px,3.6vw,52px);letter-spacing:-0.02em">
+        ${stats.subscriptionsReplacedPerYear.toLocaleString()}
+      </p>
+      <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+        Subscriptions replaced / year
+      </p>
+    </div>
+    <div style="padding-top:28px">
+      <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:clamp(34px,3.6vw,52px);letter-spacing:-0.02em">
+        {stats.toolsRebuilt}
+      </p>
+      <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+        Tools rebuilt
+      </p>
+    </div>
+    <div style="padding-top:28px">
+      <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:clamp(34px,3.6vw,52px);letter-spacing:-0.02em">
+        {stats.liveNow}
+      </p>
+      <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+        Live right now
+      </p>
+    </div>
+    <div style="padding-top:28px">
+      <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:clamp(34px,3.6vw,52px);letter-spacing:-0.02em">
+        {stats.githubStars}
+      </p>
+      <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+        GitHub stars
+      </p>
+    </div>
+  </section>
+
+  <section id="builds" style="max-width:1120px;margin:0 auto;padding:0 clamp(20px,5vw,72px) clamp(64px,9vw,120px)">
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px">
+      <h2 style="margin:0">The builds</h2>
+      <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+        {resultLabel}
+      </span>
+    </div>
+
+    {
+      projects.length === 0 ? (
+        <p style="margin:40px 0 0;font-size:14px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+          First build coming soon.
+        </p>
+      ) : (
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+          {projects.map((p) => (
+            <article style="display:flex;flex-direction:column;gap:14px;padding:22px 22px 18px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--color-surface) 72%, transparent);box-shadow:var(--shadow-sm)">
+              <h3 style="margin:0;font-size:19px;letter-spacing:-0.012em">
+                <a href={`/projects/${p.slug}`} style="text-decoration:none;color:var(--color-text)">
+                  {p.title}
+                </a>
+              </h3>
+              <p style="margin:0;font-size:13.5px">{p.description}</p>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

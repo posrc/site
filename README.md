@@ -1,43 +1,43 @@
-# Astro Starter Kit: Minimal
+# Project Open Source — site
+
+The source for [projectopensource.org](https://github.com/posrc): rebuilding
+subscription AI tools as open-source projects, one build at a time.
+
+## Setup
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev       # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| Command             | Action                                        |
+| :------------------ | :--------------------------------------------- |
+| `npm install`        | Install dependencies                           |
+| `npm run dev`         | Start the local dev server                     |
+| `npm run build`       | Build the static site to `./dist/`             |
+| `npm run preview`     | Preview the production build locally           |
+| `npm run astro check` | Type-check `.astro` files                      |
 
-## 🚀 Project Structure
+## Adding a project
 
-Inside of your Astro project, you'll see the following folders and files:
+Add a Markdown file to `src/content/projects/`, following the schema in
+`src/content.config.ts` (a superset of the `Project` type in
+`src/types/index.ts`). See `example-template.md` in that directory for every
+field the project detail page template expects — it's a `draft: true` entry
+kept only to visually verify the template, not a real build.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Current status — Phase 1
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Static scaffold from the Claude Design MCP reference. No GitHub API
+integration and no mobile pass yet.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [x] Astro + TypeScript project scaffold
+- [x] Design tokens extracted from the Nocturne design system
+- [x] Base layout, nav, and footer
+- [x] Homepage hero, live stats bar, empty-state builds grid
+- [x] Project content collection + detail page template
+- [x] About page
+- [ ] Real project entries
+- [ ] GitHub API integration (live star counts)
+- [ ] Mobile layout pass
+- [ ] Search/filter/sort on the builds grid

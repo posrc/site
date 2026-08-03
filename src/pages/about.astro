@@ -1,0 +1,135 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getProjects } from "../lib/projects";
+import { computeStats } from "../lib/stats";
+
+const projects = await getProjects();
+const stats = computeStats(projects);
+---
+
+<BaseLayout
+  title="About — projectopensource.org"
+  description="Yuvan Adarsh Jagannathan — CS student rebuilding AI subscriptions as open-source tools."
+  footerVariant="about"
+>
+  <div
+    class="about-layout"
+    style="max-width:1120px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(64px,9vw,120px);align-items:start"
+  >
+    <div>
+      <p style="display:flex;align-items:center;gap:14px;margin:0 0 20px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent)">
+        <span style="width:44px;height:1px;background:var(--color-accent)"></span>About
+      </p>
+      <h1 style="margin:0;font-size:clamp(34px,4.4vw,58px);letter-spacing:-0.025em">
+        Yuvan Adarsh Jagannathan
+      </h1>
+
+      <div style="margin-top:28px;font-size:16px;max-width:60ch;color:color-mix(in srgb, var(--color-text) 84%, transparent)">
+        <p>
+          I'm a computer science student. Somewhere between my third and
+          fourth AI subscription I did the arithmetic, didn't like it, and
+          started rebuilding the tools instead of renting them.
+        </p>
+        <p>
+          The pattern is always the same. The demo is magic, the model is a
+          public API, and the twenty dollars is buying glue code plus a nice
+          onboarding flow. That glue is worth something — it's just not
+          worth a subscription I forget to cancel. So I write the glue, put
+          it on GitHub, and document the parts that are still bad.
+        </p>
+        <p>
+          None of these are startups. Nothing here has a pricing page. If a
+          build stops working I'll mark it archived rather than pretend,
+          and if you want to take one over, the license already says you
+          can.
+        </p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,auto);gap:40px;margin-top:48px;padding-top:24px;border-top:1px solid var(--color-divider)">
+        <div>
+          <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:28px">
+            {stats.toolsRebuilt}
+          </p>
+          <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+            Tools rebuilt
+          </p>
+        </div>
+        <div>
+          <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:28px">
+            ${stats.subscriptionsReplacedPerYear.toLocaleString()}
+          </p>
+          <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+            Replaced / year
+          </p>
+        </div>
+        <div>
+          <p style="margin:0;font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:28px">
+            {stats.githubStars}
+          </p>
+          <p style="margin:6px 0 0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+            GitHub stars
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="card elev-sm">
+      <p style="margin:0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 60%, transparent)">
+        Elsewhere
+      </p>
+      <a
+        href="https://github.com/posrc"
+        target="_blank"
+        rel="noreferrer"
+        style="display:flex;justify-content:space-between;text-decoration:none;color:var(--color-text);font-size:13.5px"
+      >
+        <span>GitHub</span>
+        <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:color-mix(in srgb, var(--color-text) 65%, transparent)">
+          @posrc
+        </span>
+      </a>
+      <a
+        href="https://instagram.com/yuvanadarsh"
+        target="_blank"
+        rel="noreferrer"
+        style="display:flex;justify-content:space-between;text-decoration:none;color:var(--color-text);font-size:13.5px"
+      >
+        <span>Instagram</span>
+        <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:color-mix(in srgb, var(--color-text) 65%, transparent)">
+          @yuvanadarsh
+        </span>
+      </a>
+      <a
+        href="https://linkedin.com/in/yuvanadarsh"
+        target="_blank"
+        rel="noreferrer"
+        style="display:flex;justify-content:space-between;text-decoration:none;color:var(--color-text);font-size:13.5px"
+      >
+        <span>LinkedIn</span>
+        <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:color-mix(in srgb, var(--color-text) 65%, transparent)">
+          yuvanadarsh
+        </span>
+      </a>
+      <p style="margin:4px 0 0;font-size:12px;color:color-mix(in srgb, var(--color-text) 52%, transparent)">
+        Instagram is where the build clips go. GitHub is where the actual
+        work is.
+      </p>
+      <hr class="hr" style="margin:8px 0" />
+      <a class="btn btn-primary" href="/">See the builds</a>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 56px;
+  }
+
+  @media (max-width: 860px) {
+    .about-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
