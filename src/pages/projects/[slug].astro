@@ -1,0 +1,211 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("projects");
+  const sorted = [...entries].sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+  );
+
+  return sorted.map((entry, i) => {
+    const hasSiblings = sorted.length > 1;
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        prev: hasSiblings ? sorted[(i - 1 + sorted.length) % sorted.length] : undefined,
+        next: hasSiblings ? sorted[(i + 1) % sorted.length] : undefined,
+      },
+    };
+  });
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+const p = entry.data;
+
+const STATUS_LABEL: Record<string, string> = {
+  live: "Live",
+  "in-progress": "In Progress",
+  archived: "Archived",
+};
+const STATUS_CLASS: Record<string, string> = {
+  live: "tag tag-outline",
+  "in-progress": "tag tag-accent",
+  archived: "tag tag-neutral",
+};
+
+const yearPrice = p.originalPrice * 12;
+---
+
+<BaseLayout
+  title={`${p.title} — projectopensource.org`}
+  description={p.description}
+  footerVariant="project"
+>
+  <div style="max-width:1120px;margin:0 auto;padding:clamp(32px,5vw,56px) clamp(20px,5vw,72px) clamp(64px,9vw,120px)">
+    <a href="/" style="display:inline-block;margin-bottom:32px;font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent);text-decoration:none">
+      &larr; All builds
+    </a>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <span class={STATUS_CLASS[p.status]}>{STATUS_LABEL[p.status]}</span>
+          <span class="tag tag-neutral">{p.category}</span>
+          <span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+            &#9733; {p.stars}
+          </span>
+        </div>
+        <h1 style="margin:0;font-size:clamp(38px,5vw,64px);line-height:1.05;letter-spacing:-0.025em">
+          {p.title}
+        </h1>
+        <p style="margin:18px 0 0;font-size:16px;max-width:60ch;color:color-mix(in srgb, var(--color-text) 82%, transparent)">
+          {p.description}
+        </p>
+        <p style="margin:14px 0 0;font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+          Replaces {p.originalApp} — ${p.originalPrice}/mo, or ${yearPrice.toLocaleString()} a year.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px">
+          {p.demoUrl && (
+            <a class="btn btn-primary" href={p.demoUrl} target="_blank" rel="noreferrer">
+              Live demo
+            </a>
+          )}
+          <a class="btn btn-secondary" href={p.githubUrl} target="_blank" rel="noreferrer">
+            GitHub repo
+          </a>
+          {p.videoUrl && (
+            <a class="btn btn-secondary" href={p.videoUrl} target="_blank" rel="noreferrer">
+              Video walkthrough
+            </a>
+          )}
+        </div>
+      </div>
+
+      <aside class="card elev-sm">
+        <p style="margin:0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 60%, transparent)">
+          Run it yourself
+        </p>
+        <code style="display:block;padding:10px 12px;border-radius:var(--radius-sm);background:color-mix(in srgb, black 30%, var(--color-surface));font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;overflow-x:auto;white-space:pre">
+          {p.installCommand}
+        </code>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+          {p.stack.map((row) => (
+            <div style="display:grid;grid-template-columns:76px 1fr;gap:8px;font-size:12.5px">
+              <span style="color:color-mix(in srgb, var(--color-text) 55%, transparent)">{row.label}</span>
+              <span>{row.value}</span>
+            </div>
+          ))}
+        </div>
+      </aside>
+    </div>
+
+    <hr class="hr" />
+
+    <section style="display:grid;grid-template-columns:200px 1fr;gap:24px">
+      <h2 style="margin:0">Why I built this</h2>
+      <div style="font-size:15px;max-width:65ch">
+        <Content />
+      </div>
+    </section>
+
+    <section style="margin-top:40px">
+      <h2>How it works</h2>
+      <div style="display:flex;flex-direction:column">
+        {p.steps.map((step, i) => (
+          <div style="display:grid;grid-template-columns:52px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--color-divider)">
+            <span style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:20px;color:var(--color-accent)">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <h3 style="margin:0 0 4px;font-size:17px">{step.title}</h3>
+              <p style="margin:0;font-size:14px;color:color-mix(in srgb, var(--color-text) 80%, transparent)">
+                {step.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p style="margin:32px 0 12px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 60%, transparent)">
+        The pipeline
+      </p>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+        {p.pipeline.map((node, i) => (
+          <>
+            {i > 0 && <span style="color:var(--color-accent-600)">&rarr;</span>}
+            <div style="min-width:118px;padding:10px 12px;border-radius:var(--radius-sm);box-shadow:inset 0 0 0 1px var(--color-divider)">
+              <p style="margin:0;font-size:13px">{node.label}</p>
+              <p style="margin:2px 0 0;font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+                {node.note}
+              </p>
+            </div>
+          </>
+        ))}
+      </div>
+
+      <div style="margin-top:28px;border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--color-surface);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:color-mix(in srgb, var(--color-text) 60%, transparent)">
+          {p.codeExample.filename}
+        </div>
+        <pre style="margin:0;padding:16px;background:color-mix(in srgb, black 30%, var(--color-surface));font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:1.75;overflow-x:auto">{p.codeExample.code}</pre>
+      </div>
+    </section>
+
+    <hr class="hr" />
+
+    <section>
+      <h2>What's different from {p.originalApp}</h2>
+      <p style="margin:0 0 24px;font-size:13px;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+        Written by me, about my own project, so grade accordingly.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="padding:20px;border-radius:var(--radius-md);background:var(--color-accent-900)">
+          <h3 style="margin:0 0 12px;font-size:15px">What it matches</h3>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+            {p.whatItMatches.map((item) => (
+              <li style="display:flex;gap:8px;font-size:13.5px">
+                <span style="color:var(--color-accent)">&#10003;</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style="padding:20px;border-radius:var(--radius-md);background:var(--color-neutral-900)">
+          <h3 style="margin:0 0 12px;font-size:15px">Where it falls short</h3>
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+            {p.whereItFallsShort.map((item) => (
+              <li style="display:flex;gap:8px;font-size:13.5px">
+                <span style="color:color-mix(in srgb, var(--color-text) 50%, transparent)">&mdash;</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {(prev || next) && (
+      <nav style="display:flex;justify-content:space-between;gap:16px;margin-top:56px;padding-top:24px;border-top:1px solid var(--color-divider)">
+        {prev ? (
+          <a href={`/projects/${prev.id}`} style="text-decoration:none">
+            <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+              Previous build
+            </p>
+            <p style="margin:0;color:var(--color-text)">&larr; {prev.data.title}</p>
+          </a>
+        ) : <span />}
+        {next && (
+          <a href={`/projects/${next.id}`} style="text-decoration:none;text-align:right">
+            <p style="margin:0 0 4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 55%, transparent)">
+              Next build
+            </p>
+            <p style="margin:0;color:var(--color-text)">{next.data.title} &rarr;</p>
+          </a>
+        )}
+      </nav>
+    )}
+  </div>
+</BaseLayout>
