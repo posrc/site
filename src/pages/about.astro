@@ -12,7 +12,10 @@ const stats = computeStats(projects);
   description="Yuvan Adarsh Jagannathan — CS student rebuilding AI subscriptions as open-source tools."
   footerVariant="about"
 >
-  <div style="max-width:1120px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(64px,9vw,120px);display:grid;grid-template-columns:1fr 320px;gap:56px;align-items:start">
+  <div
+    class="about-layout"
+    style="max-width:1120px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(64px,9vw,120px);align-items:start"
+  >
     <div>
       <p style="display:flex;align-items:center;gap:14px;margin:0 0 20px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-accent)">
         <span style="width:44px;height:1px;background:var(--color-accent)"></span>About
@@ -116,3 +119,17 @@ const stats = computeStats(projects);
     </aside>
   </div>
 </BaseLayout>
+
+<style>
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 56px;
+  }
+
+  @media (max-width: 860px) {
+    .about-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
